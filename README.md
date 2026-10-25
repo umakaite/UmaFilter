@@ -1,14 +1,17 @@
-# UmaFilter
-Link to the site itself: https://umakaite.github.io/UmaFilter/
+# UmaFilter: https://umakaite.github.io/UmaFilter/
 
-I barely know how to code but here we go.
+I barely know how to code, but here we go!
 
-Fork of UmaFlagger to update it with new lists of filtering rules and filtered terms.
+Fork of UmaFlagger to update it with new lists of filtering rules and filtered terms. Please submit bugs if you find any!
 
-Original chat filter detector idea and webpage: https://github.com/arcionek/UmaFlagger
+Credits:
 
-uma_filter_rules.json source: https://github.com/ayaliz
+- Original chat filter detector idea, initial script, and webpage: https://github.com/arcionek/UmaFlagger
 
-TODO: halfwidth_katakana_fold
-TODO: Highlights get doubled if 2 rules are caught (e.g.: "orgi")
-TODO: Actually validate against in game chat
+- uma_filter_rules.json source: https://github.com/ayaliz
+
+- unicode-case-folding.js: https://github.com/avivkeller/unicode-case-folding
+
+TODO: halfwidth_katakana_fold isn't fully accurate using String.normalize("NFKC")
+
+- For example: ﾜｷﾞﾅ -> ワギナ != ワギナ (U+30EF **U+30AD U+3099** U+30CA vs U+30EF **U+30AE** U+30CA)
