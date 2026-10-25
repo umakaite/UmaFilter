@@ -8,12 +8,11 @@ const removeForDirect = umaFilterRules.normalization.direct_matching.ignored_cod
 const input = document.getElementById("input");
 const output = document.getElementById("output");
 
-function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, leftSide, bothSides) {
+function findOffenses(text) {
   const offenses = [];
 
-  // Build alphanumeric-only normalized string
+  // Normalize text according to rules
   let normalized = "";
-  const indexMap = []; // normalized index -> original index
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
@@ -22,7 +21,9 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
       normalized += String.fromCharCode(ch.charCodeAt(0) - 0xFEE0);
     }
     // halfwidth_katakana_fold
-    // ???
+    else if (ch.charCodeAt(0) >= 0xFF61 && ch.charCodeAt(0) <= 0xFF9F) {
+      normalized += ch.normalize("NFKC");
+    }
     // ideographic_space_fold
     else if (ch.charCodeAt(0) === 0x3000) {
       normalized += " ";
@@ -34,6 +35,8 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     }
   }
 
+  // Remove characters for direct matching and create an index map
+  const indexMap = []; // direct match index -> original index
   let normalizedDirect = "";
   for (let i = 0; i < normalized.length; i++) {
     const ch = normalized[i];
@@ -52,7 +55,7 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
   function checkRepeatOffense(start, end)
   {
     let check = expandSpaces(start, end)[0];
-    console.log(offenses.some(e=>e[0] === check));
+    // console.log(offenses.some(e=>e[0] === check));
     return offenses.some(e=>e[0] === check);
   }
 
@@ -62,7 +65,7 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     while (idx !== -1) {
       let start = indexMap[idx];
       let end = indexMap[idx + word.length - 1];
-      if (!checkRepeatOffense(start)) {
+      if (!checkRepeatOffense(start, end)) {
         offenses.push(expandSpaces(start, end));
       }
       idx = normalizedDirect.indexOf(word, idx + 1);
@@ -126,7 +129,7 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
   });
 
   console.log(normalized);
-  console.log(offenses);
+  // console.log(offenses);
   return offenses;
 }
 
@@ -166,6 +169,6 @@ function escapeHTML(str) {
 
 input.addEventListener("input", () => {
   const text = input.value;
-  const offenses = findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, leftSide, bothSides);
+  const offenses = findOffenses(text);
   output.innerHTML = highlight(text, offenses);
 });
