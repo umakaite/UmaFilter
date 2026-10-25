@@ -128,7 +128,8 @@ function findOffenses(text) {
     }
   });
 
-  console.log(normalized);
+  // console.log(normalized);
+  // console.log(normalizedDirect);
   // console.log(offenses);
   return offenses;
 }
