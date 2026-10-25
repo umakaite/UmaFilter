@@ -1,4 +1,4 @@
-// script.js
+import { caseFold } from "unicode-case-folding";
 
 // const umaFilterRules = fetch('./uma_filter_rules.json').then(response => response.json());
 const direct = umaFilterRules.rules.direct;
@@ -40,11 +40,20 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
       ch = " ";
     }
     // unicode_casefold
-    ch = ch.toLowerCase();
+    ch = caseFold(ch);
     // if (/[a-zA-Z0-9]/.test(ch)) {
     normalized += ch;
     // indexMap.push(i);
     // }
+  }
+
+  let normalizedDirect = "";
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (/[a-zA-Z0-9]/.test(ch)) {
+    normalizedDirect += ch;
+    indexMap.push(i);
+    }
   }
 
   function expandSpaces(start, end) {
