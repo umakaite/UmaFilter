@@ -59,7 +59,8 @@ function findOffenses(text) {
     return offenses.some(e=>e[0] === check);
   }
 
-  // ---------- direct ----------
+  // direct_matching
+  // After shared transforms, remove only the listed code points and perform substring matching against direct rules.
   direct.forEach(word => {
     let idx = normalizedDirect.indexOf(word);
     while (idx !== -1) {
@@ -72,10 +73,16 @@ function findOffenses(text) {
     }
   });
 
-  // // ---------- literal phrase ----------
-  // replicate with non-removed source spaces
+  // TODO: literal_phrase_matching (there's only 1 term listed and I guess Cygames hates Marine Le Pen???)
+  // Apply shared transforms only, then perform a literal substring search. Do not remove punctuation or spaces.
+  // U+0020 and folded U+3000 are equivalent. One space in the rule matches exactly one; repeated spaces do not collapse.
   
-  // ---------- either side ----------
+  // space_context_matching
+  // Apply shared transforms only. Find the literal pattern and inspect its immediately adjacent characters for U+0020.
+  // ASCII U+0020 and folded U+3000 count as spaces. Comment start/end, tabs, NBSP, thin spaces, punctuation, and dashes do not count as spaces.
+
+  // either_side
+  //Requires a space immediately before or after the pattern, or both.
   eitherSide.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
@@ -93,7 +100,8 @@ function findOffenses(text) {
     }
   });
 	
-  // ---------- left side ----------
+  // left_side
+  //Requires a space immediately before the pattern; the right side is unrestricted.
   leftSide.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
@@ -110,7 +118,8 @@ function findOffenses(text) {
     }
   });
 	
-  // ---------- both sides ----------
+  // both_sides
+  // Requires spaces immediately before and after the pattern.
   bothSides.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
