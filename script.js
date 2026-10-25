@@ -40,7 +40,8 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
       ch = " ";
     }
     // unicode_casefold
-    ch = caseFold(ch);
+    // ch = caseFold(ch);
+    ch = ch.toLowerCase();
     normalized += ch;
   }
 
