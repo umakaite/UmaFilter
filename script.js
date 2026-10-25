@@ -40,7 +40,7 @@ function findOffenses(text) {
   let normalizedDirect = "";
   for (let i = 0; i < normalized.length; i++) {
     const ch = normalized[i];
-    if (!removeForDirect.includes(ch)) {
+    if (!removeForDirect.includes(ch.charCodeAt(0))) {
     normalizedDirect += ch;
     indexMap.push(i);
     }
