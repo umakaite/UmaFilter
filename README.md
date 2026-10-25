@@ -1,5 +1,5 @@
 # UmaFilter
-Link to the site itself: https://kaizerfreak.github.io/UmaFilter/
+Link to the site itself: https://umakaite.github.io/UmaFilter/
 
 I barely know how to code but here we go.
 
