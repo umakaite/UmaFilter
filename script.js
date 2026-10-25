@@ -19,23 +19,24 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     const ch = text[i];
     // fullwidth_ascii_fold
     if (ch.charCodeAt(0) >= 0xFF01 && ch.charCodeAt(0) <= 0xFF5E) {
-      ch = String.fromCharCode(ch.charCodeAt(0) - 0xFEE0);
+      normalized += String.fromCharCode(ch.charCodeAt(0) - 0xFEE0);
     }
     // halfwidth_katakana_fold
     // ???
     // ideographic_space_fold
-    if (ch.charCodeAt(0) === 0x3000) {
-      ch = " ";
+    else if (ch.charCodeAt(0) === 0x3000) {
+      normalized +=" ";
     }
     // unicode_casefold
-    // ch = caseFold(ch);
-    // normalized += ch;
-    normalized += ch.toLowerCase();
+    else {
+    normalized += caseFold(ch);
+    // normalized += ch.toLowerCase();
+    }
   }
 
   let normalizedDirect = "";
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
+  for (let i = 0; i < normalized.length; i++) {
+    const ch = normalized[i];
     if (!removeForDirect.includes(ch)) {
     normalizedDirect += ch;
     indexMap.push(i);
@@ -116,6 +117,7 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     }
   });
 
+  console.log(normalized);
   return offenses;
 }
 
