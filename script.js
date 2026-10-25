@@ -29,10 +29,22 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
 
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
-    if (/[a-zA-Z0-9]/.test(ch)) {
-      normalized += ch.toLowerCase();
-      indexMap.push(i);
+    // fullwidth_ascii_fold
+    if (ch.charCodeAt(0) >= 0xFF01 && ch.charCodeAt(0) <= 0xFF5E) {
+      ch = String.fromCharCode(ch.charCodeAt(0) - 0xFEE0);
     }
+    // halfwidth_katakana_fold
+    // ???
+    // ideographic_space_fold
+    if (ch.charCodeAt(0) === 0x3000) {
+      ch = " ";
+    }
+    // unicode_casefold
+    ch = ch.toLowerCase();
+    // if (/[a-zA-Z0-9]/.test(ch)) {
+    normalized += ch;
+    // indexMap.push(i);
+    // }
   }
 
   function expandSpaces(start, end) {
