@@ -12,6 +12,8 @@ Credits:
 
 - unicode-case-folding.js: https://github.com/avivkeller/unicode-case-folding
 
-TODO: halfwidth_katakana_fold isn't fully accurate using String.normalize("NFKC")
+TODO: halfwidth_katakana_fold isn't fully accurate using String.normalize("NFKC") since it splits out functional marks and diacritics (No one in global is typing in Japanese, right...?)
 
 - For example: ﾜｷﾞﾅ -> ワギナ != ワギナ (U+30EF **U+30AD U+3099** U+30CA vs U+30EF **U+30AE** U+30CA)
+
+TODO: Potentially yoink bypass text generator from here: https://github.com/pixloen/UmaFlagger
