@@ -1,21 +1,9 @@
-// import { caseFold } from "unicode-case-folding";
-
-// const umaFilterRules = fetch('./uma_filter_rules.json').then(response => response.json());
 const direct = umaFilterRules.rules.direct;
 const literalPhrase = umaFilterRules.rules.literal_phrase;
 const eitherSide = umaFilterRules.rules.space_context.either_side;
 const leftSide = umaFilterRules.rules.space_context.left_side;
 const bothSides = umaFilterRules.rules.space_context.both_sides;
 const removeForDirect = umaFilterRules.normalization.direct_matching.ignored_code_points_after_shared_transforms;
-
-// const highProfanity = ["oral", "inno", "prol", "nomo", "hick", "osane", "anko", "mong", "rapist", "screw" ,"destroy", "sine", "nique", "spik", "binge", "sodo", "chie", "cuck", "piss", "roa", "ago", "puta", "follo", "ubre", "k1ll", "rading", "arei", "pedo", "injun", "naga", "sixty nine", "69", "terf", "assi", "unti", "shota", "hate", "puto", "anal", "gringo", "buta", "anus", "gaiji", "chinc", "insin", "twat", "tata", "tard", "smut", "suck", "phuq", "ombo", "nabo", "muff", "kuso", "kick", "keto", "cbt", "gay", "gei", "jcb", "jew", "jot", "omg", "omu", "poa", "pud", "baka", "boob", "bomb", "damn", "debu", "dick", "cock", "gash", "isis", "jerk", "roa", "bum", "aho", "xx", "jj", "3p", "ifica", "sex", "tits", "inko", "cul", "impo", "etti"];
-// const lowProfanity = ["rape", "jap", "ntr", "abo", "sag", "kill", "butt", "tit", "fuk", "shine", "ass", "sm", "ho", "hit"];
-
-// "rape" should have  a new special case, as it only triggers when there is a space preceeding it.
-// "anko" doesn't trigger if the word is "danko"
-// const specialCase = [
-//     [/pd .*?a/g, "'pd ' followed by an 'a' is flagged no matter how much text separates them"]
-//   ];
 
 const input = document.getElementById("input");
 const output = document.getElementById("output");
@@ -41,8 +29,8 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     }
     // unicode_casefold
     // ch = caseFold(ch);
-    ch = ch.toLowerCase();
-    normalized += ch;
+    // normalized += ch;
+    normalized += ch.toLowerCase();
   }
 
   let normalizedDirect = "";
