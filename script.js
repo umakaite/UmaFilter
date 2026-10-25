@@ -1,4 +1,4 @@
-import { caseFold } from "unicode-case-folding";
+// import { caseFold } from "unicode-case-folding";
 
 // const umaFilterRules = fetch('./uma_filter_rules.json').then(response => response.json());
 const direct = umaFilterRules.rules.direct;
@@ -41,16 +41,13 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     }
     // unicode_casefold
     ch = caseFold(ch);
-    // if (/[a-zA-Z0-9]/.test(ch)) {
     normalized += ch;
-    // indexMap.push(i);
-    // }
   }
 
   let normalizedDirect = "";
   for (let i = 0; i < text.length; i++) {
     const ch = text[i];
-    if (/[a-zA-Z0-9]/.test(ch)) {
+    if (!removeForDirect.includes(ch)) {
     normalizedDirect += ch;
     indexMap.push(i);
     }
@@ -64,12 +61,12 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
 
   // ---------- direct ----------
   direct.forEach(word => {
-    let idx = normalized.indexOf(word);
+    let idx = normalizedDirect.indexOf(word);
     while (idx !== -1) {
       let start = indexMap[idx];
       let end = indexMap[idx + word.length - 1];
       offenses.push(expandSpaces(start, end));
-      idx = normalized.indexOf(word, idx + 1);
+      idx = normalizedDirect.indexOf(word, idx + 1);
     }
   });
 
@@ -80,8 +77,8 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
   eitherSide.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
-      let start = indexMap[idx];
-      let end = indexMap[idx + word.length - 1];
+      let start = idx;
+      let end = idx + word.length - 1;
 
       const hasSpaceBefore = start > 0 && text[start - 1] === " ";
       const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";
@@ -98,8 +95,8 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
   leftSide.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
-      let start = indexMap[idx];
-      let end = indexMap[idx + word.length - 1];
+      let start = idx;
+      let end = idx + word.length - 1;
 
       const hasSpaceBefore = start > 0 && text[start - 1] === " ";
       // const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";
@@ -116,8 +113,8 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
   bothSides.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
-      let start = indexMap[idx];
-      let end = indexMap[idx + word.length - 1];
+      let start = idx;
+      let end = idx + word.length - 1;
 
       const hasSpaceBefore = start > 0 && text[start - 1] === " ";
       const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";

@@ -21,6 +21,11 @@ const umaFilterRules = {
     "direct_matching": {
       "operation": "After shared transforms, remove only the listed code points and perform substring matching against direct rules.",
       "ignored_code_points_after_shared_transforms": [
+        0x0020, 0x0021, 0x0022, 0x0023, 0x0025, 0x0026, 0x0027, 0x002A, 0x002B, 0x002C,
+        0x002D, 0x002E, 0x002F, 0x003A, 0x003B, 0x003D, 0x0040, 0x005C, 0x005E, 0x005F,
+        0x007C, 0x007E, 0x2019, 0x201C, 0x201D, 0x2212
+      ],
+      "ignored_code_points_after_shared_transforms_original": [
         "U+0020", "U+0021", "U+0022", "U+0023", "U+0025", "U+0026", "U+0027", "U+002A", "U+002B", "U+002C",
         "U+002D", "U+002E", "U+002F", "U+003A", "U+003B", "U+003D", "U+0040", "U+005C", "U+005E", "U+005F",
         "U+007C", "U+007E", "U+2019", "U+201C", "U+201D", "U+2212"
