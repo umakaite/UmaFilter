@@ -25,7 +25,7 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     // ???
     // ideographic_space_fold
     else if (ch.charCodeAt(0) === 0x3000) {
-      normalized +=" ";
+      normalized += " ";
     }
     // unicode_casefold
     else {
@@ -49,13 +49,22 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
     return [start, end];
   }
 
+  function checkRepeatOffense(start, end)
+  {
+    let check = expandSpaces(start, end)[0];
+    console.log(offenses.some(e=>e[0] === check));
+    return offenses.some(e=>e[0] === check);
+  }
+
   // ---------- direct ----------
   direct.forEach(word => {
     let idx = normalizedDirect.indexOf(word);
     while (idx !== -1) {
       let start = indexMap[idx];
       let end = indexMap[idx + word.length - 1];
-      offenses.push(expandSpaces(start, end));
+      if (!checkRepeatOffense(start)) {
+        offenses.push(expandSpaces(start, end));
+      }
       idx = normalizedDirect.indexOf(word, idx + 1);
     }
   });
@@ -70,10 +79,10 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
       let start = idx;
       let end = idx + word.length - 1;
 
-      const hasSpaceBefore = start > 0 && text[start - 1] === " ";
-      const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";
+      const hasSpaceBefore = start > 0 && normalized[start - 1] === " ";
+      const hasSpaceAfter = end < normalized.length - 1 && normalized[end + 1] === " ";
 
-      if (hasSpaceBefore || hasSpaceAfter) {
+      if ((hasSpaceBefore || hasSpaceAfter) && !checkRepeatOffense(start)) {
         offenses.push(expandSpaces(start, end));
       }
 
@@ -88,10 +97,9 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
       let start = idx;
       let end = idx + word.length - 1;
 
-      const hasSpaceBefore = start > 0 && text[start - 1] === " ";
-      // const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";
+      const hasSpaceBefore = start > 0 && normalized[start - 1] === " ";
 
-      if (hasSpaceBefore) {
+      if (hasSpaceBefore && !checkRepeatOffense(start)) {
         offenses.push(expandSpaces(start, end));
       }
 
@@ -106,10 +114,10 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
       let start = idx;
       let end = idx + word.length - 1;
 
-      const hasSpaceBefore = start > 0 && text[start - 1] === " ";
-      const hasSpaceAfter = end < text.length - 1 && text[end + 1] === " ";
+      const hasSpaceBefore = start > 0 && normalized[start - 1] === " ";
+      const hasSpaceAfter = end < normalized.length - 1 && normalized[end + 1] === " ";
 
-      if (hasSpaceBefore & hasSpaceAfter) {
+      if (hasSpaceBefore && hasSpaceAfter && !checkRepeatOffense(start)) {
         offenses.push(expandSpaces(start, end));
       }
 
@@ -118,6 +126,7 @@ function findOffenses(text, removeForDirect, direct, literalPhrase, eitherSide, 
   });
 
   console.log(normalized);
+  console.log(offenses);
   return offenses;
 }
 

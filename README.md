@@ -9,6 +9,6 @@ Original chat filter detector idea and webpage: https://github.com/arcionek/UmaF
 
 uma_filter_rules.json source: https://github.com/ayaliz
 
-TODO: Text normalization code is unchanged, meaning accented and non-English characters will not be detected
+TODO: halfwidth_katakana_fold
 TODO: Highlights get doubled if 2 rules are caught (e.g.: "orgi")
 TODO: Actually validate against in game chat
