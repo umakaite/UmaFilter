@@ -220,7 +220,7 @@ const umaFilterRules = {
       "vollpfosten", "conchetumare", "diomaledetto", "eiaculazione", "eichellecker", "masterbating",
       "masterbation", "masturbacion", "masturbación", "masturbieren", "spearchucker", "transvestite",
       "carpetmuncher", "conchetumadre", "madonnamaiala", "masturbazione", "muerdealmohadas",
-      "mannaggialamadonna"
+      "mannaggialamadonna", "mamame"
     ],
     "literal_phrase": ["le pen"],
     "space_context": {
