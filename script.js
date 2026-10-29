@@ -1,9 +1,9 @@
-const direct = umaFilterRules.rules.direct;
-const literalPhrase = umaFilterRules.rules.literal_phrase;
-const eitherSide = umaFilterRules.rules.space_context.either_side;
-const leftSide = umaFilterRules.rules.space_context.left_side;
-const bothSides = umaFilterRules.rules.space_context.both_sides;
-const removeForDirect = umaFilterRules.normalization.direct_matching.ignored_code_points_after_shared_transforms;
+const DIRECT = UMA_FILTER_RULES.rules.direct;
+const LITERAL_PHRASE = UMA_FILTER_RULES.rules.literal_phrase;
+const EITHER_SIDE = UMA_FILTER_RULES.rules.space_context.either_side;
+const LEFT_SIDE = UMA_FILTER_RULES.rules.space_context.left_side;
+const BOTH_SIDES = UMA_FILTER_RULES.rules.space_context.both_sides;
+const REMOVE_FOR_DIRECT = UMA_FILTER_RULES.normalization.direct_matching.ignored_code_points_after_shared_transforms;
 
 const input = document.getElementById("input");
 const output = document.getElementById("output");
@@ -40,7 +40,7 @@ function findOffenses(text) {
   let normalizedDirect = "";
   for (let i = 0; i < normalized.length; i++) {
     const ch = normalized[i];
-    if (!removeForDirect.includes(ch.charCodeAt(0))) {
+    if (!REMOVE_FOR_DIRECT.includes(ch.charCodeAt(0))) {
     normalizedDirect += ch;
     indexMap.push(i);
     }
@@ -61,7 +61,7 @@ function findOffenses(text) {
 
   // direct_matching
   // After shared transforms, remove only the listed code points and perform substring matching against direct rules.
-  direct.forEach(word => {
+  DIRECT.forEach(word => {
     let idx = normalizedDirect.indexOf(word);
     while (idx !== -1) {
       let start = indexMap[idx];
@@ -83,7 +83,7 @@ function findOffenses(text) {
 
   // either_side
   //Requires a space immediately before or after the pattern, or both.
-  eitherSide.forEach(word => {
+  EITHER_SIDE.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
       let start = idx;
@@ -102,7 +102,7 @@ function findOffenses(text) {
 	
   // left_side
   //Requires a space immediately before the pattern; the right side is unrestricted.
-  leftSide.forEach(word => {
+  LEFT_SIDE.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
       let start = idx;
@@ -120,7 +120,7 @@ function findOffenses(text) {
 	
   // both_sides
   // Requires spaces immediately before and after the pattern.
-  bothSides.forEach(word => {
+  BOTH_SIDES.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
       let start = idx;

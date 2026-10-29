@@ -1,4 +1,4 @@
-const umaFilterRules = {
+const UMA_FILTER_RULES = {
   "normalization": {
     "shared_transforms_in_order": [
       {
