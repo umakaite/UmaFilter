@@ -52,13 +52,17 @@ function findOffenses(text) {
     return [start, end];
   }
 
-  function checkRepeatOffense(start, end)
-  {
-    let checkStart = expandSpaces(start, end)[0];
-    let checkEnd = expandSpaces(start, end)[1];
-    // console.log(offenses.some(e=>e[0] === check));
-    return offenses.some(e=>e[0] === checkStart || e[1] === checkEnd);
-  }
+  // function checkRepeatOffense(start, end)
+  // {
+  //   // let checkStart = expandSpaces(start, end)[0];
+  //   // let checkEnd = expandSpaces(start, end)[1];
+  //   // console.log(checkStart, checkEnd);
+  //   console.log(start, end);
+  //   // console.log(offenses.some(e=>e[0] === checkStart || e[1] === checkEnd));
+  //   console.log(offenses);
+  //   // return offenses.some(e=>e[0] === checkStart || e[1] === checkEnd);
+  //   return offenses.some(e=>e[0] === start || e[1] === end);
+  // }
 
   // direct_matching
   // After shared transforms, remove only the listed code points and perform substring matching against direct rules.
@@ -67,9 +71,7 @@ function findOffenses(text) {
     while (idx !== -1) {
       let start = indexMap[idx];
       let end = indexMap[idx + word.length - 1];
-      if (!checkRepeatOffense(start, end)) {
-        offenses.push(expandSpaces(start, end));
-      }
+      offenses.push(expandSpaces(start, end));
       idx = normalizedDirect.indexOf(word, idx + 1);
     }
   });
@@ -82,11 +84,7 @@ function findOffenses(text) {
     while (idx !== -1) {
       let start = idx;
       let end = idx + word.length - 1;
-
-      if (!checkRepeatOffense(start, end)) {
-        offenses.push(expandSpaces(start, end));
-      }
-
+      offenses.push([start, end]);
       idx = normalized.indexOf(word, idx + 1);
     }
   });
@@ -96,38 +94,32 @@ function findOffenses(text) {
   // ASCII U+0020 and folded U+3000 count as spaces. Comment start/end, tabs, NBSP, thin spaces, punctuation, and dashes do not count as spaces.
 
   // either_side
-  //Requires a space immediately before or after the pattern, or both.
+  // Requires a space immediately before or after the pattern, or both.
   EITHER_SIDE.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
       let start = idx;
       let end = idx + word.length - 1;
-
       const hasSpaceBefore = start > 0 && normalized[start - 1] === " ";
       const hasSpaceAfter = end < normalized.length - 1 && normalized[end + 1] === " ";
-
-      if ((hasSpaceBefore || hasSpaceAfter) && !checkRepeatOffense(start)) {
-        offenses.push(expandSpaces(start, end));
+      if ((hasSpaceBefore || hasSpaceAfter)) {
+        offenses.push([start, end]);
       }
-
       idx = normalized.indexOf(word, idx + 1);
     }
   });
 	
   // left_side
-  //Requires a space immediately before the pattern; the right side is unrestricted.
+  // Requires a space immediately before the pattern; the right side is unrestricted.
   LEFT_SIDE.forEach(word => {
     let idx = normalized.indexOf(word);
     while (idx !== -1) {
       let start = idx;
       let end = idx + word.length - 1;
-
       const hasSpaceBefore = start > 0 && normalized[start - 1] === " ";
-
-      if (hasSpaceBefore && !checkRepeatOffense(start)) {
-        offenses.push(expandSpaces(start, end));
+      if (hasSpaceBefore) {
+        offenses.push([start, end]);
       }
-
       idx = normalized.indexOf(word, idx + 1);
     }
   });
@@ -139,21 +131,18 @@ function findOffenses(text) {
     while (idx !== -1) {
       let start = idx;
       let end = idx + word.length - 1;
-
       const hasSpaceBefore = start > 0 && normalized[start - 1] === " ";
       const hasSpaceAfter = end < normalized.length - 1 && normalized[end + 1] === " ";
-
-      if (hasSpaceBefore && hasSpaceAfter && !checkRepeatOffense(start)) {
-        offenses.push(expandSpaces(start, end));
+      if (hasSpaceBefore && hasSpaceAfter) {
+        offenses.push([start, end]);
       }
-
       idx = normalized.indexOf(word, idx + 1);
     }
   });
 
-  console.log(normalized);
-  console.log(normalizedDirect);
-  console.log(offenses);
+  // console.log(normalized);
+  // console.log(normalizedDirect);
+  // console.log(offenses);
   return offenses;
 }
 
@@ -191,8 +180,21 @@ function escapeHTML(str) {
   }[m]));
 }
 
+function merge(ranges) {
+    ranges.sort(function(a, b) { return a[0]-b[0] || a[1]-b[1] });
+    let result = [], last;
+    ranges.forEach(function (r) {
+        if (!last || r[0] > last[1])
+            result.push(last = r);
+        else if (r[1] > last[1])
+            last[1] = r[1];
+    });
+    return result;
+}
+
 input.addEventListener("input", () => {
   const text = input.value;
-  const offenses = findOffenses(text);
+  let offenses = findOffenses(text);
+  offenses = merge(offenses); 
   output.innerHTML = highlight(text, offenses);
 });
