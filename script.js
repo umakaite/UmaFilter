@@ -54,9 +54,10 @@ function findOffenses(text) {
 
   function checkRepeatOffense(start, end)
   {
-    let check = expandSpaces(start, end)[0];
+    let checkStart = expandSpaces(start, end)[0];
+    let checkEnd = expandSpaces(start, end)[1];
     // console.log(offenses.some(e=>e[0] === check));
-    return offenses.some(e=>e[0] === check);
+    return offenses.some(e=>e[0] === checkStart || e[1] === checkEnd);
   }
 
   // direct_matching
