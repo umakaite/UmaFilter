@@ -73,9 +73,22 @@ function findOffenses(text) {
     }
   });
 
-  // TODO: literal_phrase_matching (there's only 1 term listed and I guess Cygames hates Marine Le Pen???)
+  // literal_phrase_matching (there's only 1 term listed and I guess Cygames hates Marine Le Pen???)
   // Apply shared transforms only, then perform a literal substring search. Do not remove punctuation or spaces.
   // U+0020 and folded U+3000 are equivalent. One space in the rule matches exactly one; repeated spaces do not collapse.
+  LITERAL_PHRASE.forEach(word => {
+    let idx = normalized.indexOf(word);
+    while (idx !== -1) {
+      let start = idx;
+      let end = idx + word.length - 1;
+
+      if (!checkRepeatOffense(start, end)) {
+        offenses.push(expandSpaces(start, end));
+      }
+
+      idx = normalized.indexOf(word, idx + 1);
+    }
+  });
   
   // space_context_matching
   // Apply shared transforms only. Find the literal pattern and inspect its immediately adjacent characters for U+0020.
@@ -137,9 +150,9 @@ function findOffenses(text) {
     }
   });
 
-  // console.log(normalized);
-  // console.log(normalizedDirect);
-  // console.log(offenses);
+  console.log(normalized);
+  console.log(normalizedDirect);
+  console.log(offenses);
   return offenses;
 }
 
