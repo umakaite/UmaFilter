@@ -17,3 +17,7 @@ TODO: halfwidth_katakana_fold isn't fully accurate using String.normalize("NFKC"
 - For example: ﾜｷﾞﾅ -> ワギナ != ワギナ (U+30EF **U+30AD U+3099** U+30CA vs U+30EF **U+30AE** U+30CA)
 
 TODO: Potentially yoink bypass text generator from here: https://github.com/pixloen/UmaFlagger
+
+TODO: Character limit cutoff highlight
+
+TODO: Multiline parsing?
